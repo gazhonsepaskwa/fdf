@@ -38,16 +38,86 @@ int count_pts(char *file_path)
 	{
 		ft_striteri(line, nl_to_sp);
 		count += count_pts_inln(line);
-		/*ft_debug("%d", count);*/
+		ft_free(&line);
 		line = get_next_line(fd);
 	}
 	close(fd);
+	ft_free(&line);
 	return (count);
 }
 
-t_xyz_pt	*get_pt_cloud(char *file_path)
+char **get_clean_line(int fd)
 {
-	t_xyz_pt	*cloud;
+	char	**tab;
+	char	*line;
 
-	cloud = ft_calloc(count_pts(file_path), sizeof(t_xyz_pt));
+	line = get_next_line(fd);
+	if (!line)
+		return (NULL);
+	ft_striteri(line, nl_to_sp);
+	tab = ft_split(line, ' ');
+	ft_free(&line);
+	return (tab);
+}
+
+void set_xyz_pt(t_xyz_pt *pt, int x, int y, int z)
+{
+	pt->x = x;
+	pt->y = y;
+	pt->z = z;
+}
+
+void	ft_free_s_tab(char **tab)
+{
+	int i;
+	
+	if (tab == NULL)
+		return ;
+	i = -1;
+	while (tab[++i])
+		free(tab[i]);
+	free(tab);
+}
+
+t_xyz_pt	**get_pt_cloud(char *file_path)
+{
+	t_xyz_pt	**cloud;
+	int			fd;
+	char		**tab;
+	int			lst_pt;
+	t_xy_pt		i;
+
+	cloud = malloc((count_pts(file_path) + 1) * sizeof(t_xyz_pt *));
+	fd = open(file_path, O_RDONLY);
+	tab = get_clean_line(fd);
+	if (tab == NULL)
+		return(NULL);
+	lst_pt = 0;
+	i.y = 0;
+	while(tab && tab[0] != NULL)
+	{
+		i.x = 0;
+		while (tab[i.x] != 0)
+		{
+			cloud[lst_pt] = ft_calloc(1, sizeof(t_xyz_pt));
+			set_xyz_pt(cloud[lst_pt++], i.x, i.y, ft_atoi(tab[i.x]));
+			i.x++;
+		}
+		ft_free_s_tab(tab);
+		tab = get_clean_line(fd);
+		i.y++;
+	}
+	cloud[lst_pt] = NULL;
+	ft_free_s_tab(tab);
+	return (cloud);
+}
+
+void free_pt_cloud(t_xyz_pt **cloud)
+{
+	int i;
+
+	i = -1;
+	while(cloud[++i])
+		free(cloud[i]);
+	free(cloud);
 }

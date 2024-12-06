@@ -24,24 +24,27 @@ typedef struct s_xyz_pt {
 }	t_xyz_pt;
 
 // define
-#ifndef NULL
-# define NULL (void *)0
-#endif
-#define WIDTH 500
-#define HEIGHT 500
+#define WIDTH 1080
+#define HEIGHT 720
 #define X_OFFSET 10
 #define Y_OFFSET 10
 #define TETA 30
 
-// get_file.c
-int	**getfile(char *file_path);
+// putmap
+void	proj_cloud_to_img(t_xyz_pt **cloud, t_img *img, int color, int zoom);
+
+// get_pt_cloud.c
+t_xyz_pt	**get_pt_cloud(char *file_path);
+void free_pt_cloud(t_xyz_pt **cloud);
 
 // mlx_addon.c
 void mlx_put_px(t_img *img, int x, int y, int color);
 
+// test_fcts.c
+void test_cloud(char *file_path);
 
 
 
-// tmp for test
+// tempo 
 
-int count_pts(char *file_path);
+void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color);
