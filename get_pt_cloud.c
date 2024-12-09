@@ -79,13 +79,12 @@ void	ft_free_s_tab(char **tab)
 	free(tab);
 }
 
-t_xyz_pt	**get_pt_cloud(char *file_path)
+t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i)
 {
 	t_xyz_pt	**cloud;
 	int			fd;
 	char		**tab;
 	int			lst_pt;
-	t_xy_pt		i;
 
 	cloud = malloc((count_pts(file_path) + 1) * sizeof(t_xyz_pt *));
 	fd = open(file_path, O_RDONLY);
@@ -93,19 +92,19 @@ t_xyz_pt	**get_pt_cloud(char *file_path)
 	if (tab == NULL)
 		return(NULL);
 	lst_pt = 0;
-	i.y = 0;
+	i->y = 0;
 	while(tab && tab[0] != NULL)
 	{
-		i.x = 0;
-		while (tab[i.x] != 0)
+		i->x = 0;
+		while (tab[i->x] != 0)
 		{
 			cloud[lst_pt] = ft_calloc(1, sizeof(t_xyz_pt));
-			set_xyz_pt(cloud[lst_pt++], i.x, i.y, ft_atoi(tab[i.x]));
-			i.x++;
+			set_xyz_pt(cloud[lst_pt++], i->x, i->y, ft_atoi(tab[i->x]));
+			i->x++;
 		}
 		ft_free_s_tab(tab);
 		tab = get_clean_line(fd);
-		i.y++;
+		i->y++;
 	}
 	cloud[lst_pt] = NULL;
 	ft_free_s_tab(tab);
@@ -120,4 +119,5 @@ void free_pt_cloud(t_xyz_pt **cloud)
 	while(cloud[++i])
 		free(cloud[i]);
 	free(cloud);
+	cloud = NULL;
 }
