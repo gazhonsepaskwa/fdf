@@ -17,10 +17,10 @@ t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom)
 	return (proj_pt);
 }
 
-static void	shift_to_center(t_xy_pt *pt)
+static void	shift_to_center(t_xy_pt *pt, t_xy_pt offset)
 {
-	pt->x += WIDTH/2;
-	pt->y += OFFSET;
+	pt->x += offset.x;
+	pt->y += offset.y;
 }
 
 int	get_direction(int pt, int pt_)
@@ -88,43 +88,43 @@ void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color)
 		steep_slope(img, dx, dy, from, to, color);
 }
 
-void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_xyz_pt **cloud, int color, float zoom)
+void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_map *map, int color)
 {
 	int i;
 	t_xy_pt proj_from;
 	t_xy_pt proj_to;
 
 	i = 0;
-	while (cloud[i])
+	while (map->cld[i])
 	{
-		if (cloud[i]->y == ref->y + 1 && ref->x == cloud[i]->x)
+		if (map->cld[i]->y == ref->y + 1 && ref->x == map->cld[i]->x)
 		{
-			proj_from = proj_iso_pt(ref, zoom);
-			proj_to = proj_iso_pt(cloud[i], zoom);
-			shift_to_center(&proj_from);
-			shift_to_center(&proj_to);
+			proj_from = proj_iso_pt(ref, map->zoom);
+			proj_to = proj_iso_pt(map->cld[i], map->zoom);
+			shift_to_center(&proj_from, map->offset);
+			shift_to_center(&proj_to, map->offset);
 			draw_line(img, proj_from, proj_to, color);
 		}
-		if (cloud[i]->x == ref->x + 1 && ref->y == cloud[i]->y)
+		if (map->cld[i]->x == ref->x + 1 && ref->y == map->cld[i]->y)
 		{
-			proj_from = proj_iso_pt(ref, zoom);
-			proj_to = proj_iso_pt(cloud[i], zoom);
-			shift_to_center(&proj_from);
-			shift_to_center(&proj_to);
+			proj_from = proj_iso_pt(ref, map->zoom);
+			proj_to = proj_iso_pt(map->cld[i], map->zoom);
+			shift_to_center(&proj_from, map->offset);
+			shift_to_center(&proj_to, map->offset);
 			draw_line(img, proj_from, proj_to, color);
 		}
 		i++;
 	}
 }
 
-void	proj_cloud_to_img(t_xyz_pt **cloud, t_img *img, int color, float zoom)
+void	proj_cloud_to_img(t_map *map, t_img *img, int color)
 {
 	int i;
 
 	i = 0;
-	while (cloud[i])
+	while (map->cld[i])
 	{
-		draw_line_axis(img, cloud[i], cloud, color, zoom);
+		draw_line_axis(img, map->cld[i], map, color);
 		i++;
 	}
 }

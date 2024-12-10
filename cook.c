@@ -1,17 +1,17 @@
 #include "fdf.h"
 
-static int	graphical_init(void **xsrv, void **win, t_img *img)
+static int	graph_init(t_graph *g)//void **xsrv, void **win, t_img *img)
 {
-	*xsrv = mlx_init();
-	if (*xsrv == NULL)
+	g->xsrv = mlx_init();
+	if (g->xsrv == NULL)
 		return (-1);
-	*win = mlx_new_window(*xsrv, WIDTH, HEIGHT, "fdf");
-	img->self = mlx_new_image(*xsrv, WIDTH, HEIGHT);
-	if (*win == NULL || img->self == NULL)
+	g->win = mlx_new_window(g->xsrv, WIDTH, HEIGHT, "fdf");
+	g->img.self = mlx_new_image(g->xsrv, WIDTH, HEIGHT);
+	if (g->win == NULL || g->img.self == NULL)
 		return (-1);
-	img->addr = mlx_get_data_addr(img->self, &img->bpp, &img->line_len,
-								&img->endian);
-	if (img->addr == NULL)
+	g->img.addr = mlx_get_data_addr(g->img.self, &g->img.bpp,
+								 	&g->img.line_len, &g->img.endian);
+	if (g->img.addr == NULL)
 		return (-1);
 	return (0);
 }
@@ -64,56 +64,50 @@ void proj_corner(t_xyz_pt *corners[4], t_xy_pt *out[2])
 	*out[1] = proj_max; 
 }
 
-void calc_fit(t_xyz_pt **cld, t_xy_pt size, float *zoom, t_xy_pt *offset)
+void calc_fit(t_map *map)
 {
 	t_xy_pt		proj[2];
+	t_xy_pt		*proj_ptr[2] = { &proj[0], &proj[1] };
 	t_xyz_pt	*corners[4] = {
-        &cld[0][0],
-        &cld[0][size.x - 1],
-        &cld[size.y - 1][0],
-        &cld[size.y - 1][size.x - 1]
+        &map->cld[0][0],
+        &map->cld[0][map->size.x - 1],
+        &map->cld[map->size.y - 1][0],
+        &map->cld[map->size.y - 1][map->size.x - 1]
     };
-	t_xy_pt *proj_ptr[2] = { &proj[0], &proj[1] };
-
 
 	proj_corner(corners, proj_ptr);
-    *zoom = fmin(
+    map->zoom = fmin(
         (float)(WIDTH / (proj[1].x - proj[0].x)),
         (float)(HEIGHT / (proj[1].y - proj[0].y))
     );
-    offset->x = (WIDTH / 2) - (*zoom * (proj[1].x + proj[0].x) / 2.0);
-    offset->y = (HEIGHT / 2) - (*zoom * (proj[1].y + proj[0].y) / 2.0);
+    map->offset.x = (WIDTH / 2) - (map->zoom * (proj[1].x + proj[0].x) / 2.0);
+    map->offset.y = (HEIGHT / 2) - (map->zoom * (proj[1].y + proj[0].y) / 2.0);
 }
 
 int	main(int ac, char **av)
 {
-	void		*xsrv;
-	void		*win;
-	t_img		img;
-	t_xyz_pt	**cld;
-	t_xy_pt		map_xy;
-	float		zoom;
-	t_xy_pt		offset;
+	t_graph	graph;
+	t_map	map;
 
 	if (input_check(ac, av) == -1)
 		return (1);
-	if (graphical_init(&xsrv, &win, &img) == -1)
+	if (graph_init(&graph) == -1)
 		return (1);
-	/*ft_debug(" Getting point cloud...   ");*/
-	cld = get_pt_cloud(av[1], &map_xy);
-	/*ft_printf("[DONE]\n");*/
-	/*ft_debug(" Projecting cloud...      ");*/
-	calc_fit(cld, map_xy, &zoom, &offset);
-	proj_cloud_to_img(cld, &img,  0x4bcec6, zoom);//zoom(cld[map_xy.x * map_xy.y - 1], HEIGHT-OFFSET)); 
-	/*ft_printf("[DONE]\n");*/
-	/*ft_debug(" Putting img to window... ");*/
-	mlx_put_image_to_window(xsrv, win, img.self, 0, 0);
-	/*ft_printf("[DONE]\n");*/
-	/*ft_debug(" Render done !");*/
-	mlx_loop(xsrv);
-	mlx_destroy_display(xsrv);
-	free_pt_cloud(cld);
-	free(xsrv);
+	ft_debug(" Getting point cloud...   ");
+	map.cld = get_pt_cloud(av[1], &map.size);
+	ft_printf("[DONE]\n");
+	ft_debug(" Projecting cloud...      ");
+	calc_fit(&map);
+	proj_cloud_to_img(&map, &graph.img,  0x4bcec6); 
+	ft_printf("[DONE]\n");
+	ft_debug(" Putting img to window... ");
+	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
+	ft_printf("[DONE]\n");
+	ft_debug(" Render done !");
+	mlx_loop(graph.xsrv);
+	mlx_destroy_display(graph.xsrv);
+	free_pt_cloud(map.cld);
+	free(graph.xsrv);
 	return (0);
 }
 

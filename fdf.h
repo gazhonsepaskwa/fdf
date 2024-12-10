@@ -23,14 +23,27 @@ typedef struct s_xyz_pt {
 	int z;
 }	t_xyz_pt;
 
+typedef struct s_graph {
+	void	*xsrv;
+	void	*win;
+	t_img	img;
+}	t_graph;
+
+typedef struct s_map {
+	t_xyz_pt 	**cld;
+	t_xy_pt 	size;
+	float 		zoom;
+	t_xy_pt		offset;
+}	t_map;
+
 // define
 #define WIDTH 1440
 #define HEIGHT 1010
 #define OFFSET 50
 #define AMP 5
 
-// putmap
-void	proj_cloud_to_img(t_xyz_pt **cloud, t_img *img, int color, float zoom);
+// putmapc
+void	proj_cloud_to_img(t_map *map, t_img *img, int color);
 t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom);
 
 // get_pt_cloud.c
@@ -46,6 +59,5 @@ void test_cloud(char *file_path);
 // general_utils.c
 float to_rad(float deg);
 
-// tempo 
-
+// tempo
 void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color);
