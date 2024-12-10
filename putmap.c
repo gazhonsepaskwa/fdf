@@ -1,19 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   putmap.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/10 17:34:56 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/12/10 17:34:58 by nalebrun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom)
+t_xy_pt	proj_iso_pt(t_xyz_pt *pt, float zoom)
 {
-	t_xy_pt proj_pt;
-	float theta;
-	float z;
+	t_xy_pt	proj_pt;
+	float	theta;
+	float	z;
 
 	theta = to_rad(35.61);
 	proj_pt.x = zoom * (pt->x - pt->y) * cos(theta);
 	if (AMP != 0)
-		z = pt->z*(AMP+10)/100;
+		z = pt->z * (AMP + 10) / 100;
 	else
-		z = pt->z*(AMP)/100;
+		z = pt->z * (AMP) / 100;
 	proj_pt.y = zoom * ((pt->x + pt->y) * sin(theta) - z);
-	
 	return (proj_pt);
 }
 
@@ -32,11 +43,12 @@ int	get_direction(int pt, int pt_)
 }
 
 // em = error margin
-void	shallow_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to, int color)
+void	shallow_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to,
+		int color)
 {
 	int	sx;
 	int	sy;
-	int em;
+	int	em;
 
 	sx = get_direction(from.x, to.x);
 	sy = get_direction(from.y, to.y);
@@ -54,11 +66,12 @@ void	shallow_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to, int col
 	}
 }
 
-void	steep_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to, int color)
+void	steep_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to,
+		int color)
 {
 	int	sx;
 	int	sy;
-	int em;
+	int	em;
 
 	sx = get_direction(from.x, to.x);
 	sy = get_direction(from.y, to.y);
@@ -77,8 +90,8 @@ void	steep_slope(t_img *img, int dx, int dy, t_xy_pt from, t_xy_pt to, int color
 }
 void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color)
 {
-	int dx;
-	int dy;
+	int	dx;
+	int	dy;
 
 	dx = abs(to.x - from.x);
 	dy = abs(to.y - from.y);
@@ -90,9 +103,9 @@ void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color)
 
 void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_map *map, int color)
 {
-	int i;
-	t_xy_pt proj_from;
-	t_xy_pt proj_to;
+	int		i;
+	t_xy_pt	proj_from;
+	t_xy_pt	proj_to;
 
 	i = 0;
 	while (map->cld[i])
@@ -119,7 +132,7 @@ void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_map *map, int color)
 
 void	proj_cloud_to_img(t_map *map, t_img *img, int color)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (map->cld[i])

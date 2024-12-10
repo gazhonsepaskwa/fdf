@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_pt_cloud.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/10 17:34:17 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/12/10 17:34:28 by nalebrun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 void	nl_to_sp(unsigned int unused, char *c)
@@ -7,7 +19,7 @@ void	nl_to_sp(unsigned int unused, char *c)
 		*c = ' ';
 }
 
-int count_pts_inln(char *ln)
+int	count_pts_inln(char *ln)
 {
 	int	i;
 	int	count;
@@ -16,19 +28,19 @@ int count_pts_inln(char *ln)
 	while (ln[i + 1])
 	{
 		if (!ft_isdigit(ln[i]) && ft_isdigit(ln[i + 1]))
-	  		count++;
+			count++;
 		i++;
 	}
 	count++;
 	return (count);
 }
 
-int count_pts(char *file_path)
+int	count_pts(char *file_path)
 {
 	char	*line;
 	int		count;
 	int		fd;
-	
+
 	fd = open(file_path, O_RDONLY);
 	line = get_next_line(fd);
 	if (!line)
@@ -46,7 +58,7 @@ int count_pts(char *file_path)
 	return (count);
 }
 
-char **get_clean_line(int fd)
+char	**get_clean_line(int fd)
 {
 	char	**tab;
 	char	*line;
@@ -60,7 +72,7 @@ char **get_clean_line(int fd)
 	return (tab);
 }
 
-void set_xyz_pt(t_xyz_pt *pt, int x, int y, int z)
+void	set_xyz_pt(t_xyz_pt *pt, int x, int y, int z)
 {
 	pt->x = x;
 	pt->y = y;
@@ -69,8 +81,8 @@ void set_xyz_pt(t_xyz_pt *pt, int x, int y, int z)
 
 void	ft_free_s_tab(char **tab)
 {
-	int i;
-	
+	int	i;
+
 	if (tab == NULL)
 		return ;
 	i = -1;
@@ -90,10 +102,10 @@ t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i)
 	fd = open(file_path, O_RDONLY);
 	tab = get_clean_line(fd);
 	if (tab == NULL)
-		return(NULL);
+		return (NULL);
 	lst_pt = 0;
 	i->y = 0;
-	while(tab && tab[0] != NULL)
+	while (tab && tab[0] != NULL)
 	{
 		i->x = 0;
 		while (tab[i->x] != 0)
@@ -111,12 +123,12 @@ t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i)
 	return (cloud);
 }
 
-void free_pt_cloud(t_xyz_pt **cloud)
+void	free_pt_cloud(t_xyz_pt **cloud)
 {
-	int i;
+	int	i;
 
 	i = -1;
-	while(cloud[++i])
+	while (cloud[++i])
 		free(cloud[i]);
 	free(cloud);
 	cloud = NULL;
