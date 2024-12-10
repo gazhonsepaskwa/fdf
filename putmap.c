@@ -1,6 +1,6 @@
 #include "fdf.h"
 
-static t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom)
+t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom)
 {
 	t_xy_pt proj_pt;
 	float theta;
@@ -120,15 +120,11 @@ void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_xyz_pt **cloud, int color, floa
 void	proj_cloud_to_img(t_xyz_pt **cloud, t_img *img, int color, float zoom)
 {
 	int i;
-	t_xy_pt pt1;
 
 	i = 0;
 	while (cloud[i])
 	{
-		/*sleep(2);*/
-		/*ft_debug("(%d, %d) sent to draw_line_axis\n", cloud[i]->x, cloud[i]->y );*/
 		draw_line_axis(img, cloud[i], cloud, color, zoom);
-		/*draw_line_axis(img, 'y', cloud[i], cloud, color, zoom);*/
 		i++;
 	}
 }

@@ -24,13 +24,14 @@ typedef struct s_xyz_pt {
 }	t_xyz_pt;
 
 // define
-#define WIDTH 1200
-#define HEIGHT 800
+#define WIDTH 1440
+#define HEIGHT 1010
 #define OFFSET 50
 #define AMP 5
 
 // putmap
 void	proj_cloud_to_img(t_xyz_pt **cloud, t_img *img, int color, float zoom);
+t_xy_pt proj_iso_pt(t_xyz_pt *pt, float zoom);
 
 // get_pt_cloud.c
 t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i);
