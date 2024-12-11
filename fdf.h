@@ -6,16 +6,24 @@
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 17:33:51 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/12/10 17:34:04 by nalebrun         ###   ########.fr       */
+/*   Updated: 2024/12/11 09:37:24 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include "mlx_linux/mlx.h"
-#include <fcntl.h>
-#include <math.h>
+#ifndef FDF_H
+# define FDF_H
 
-// struct
+# include "libft/libft.h"
+# include "mlx_linux/mlx.h"
+# include <fcntl.h>
+# include <math.h>
+
+// define
+# define WIDTH 3840
+# define HEIGHT 2090
+# define AMP 5
+
+// structs
 typedef struct s_img
 {
 	void		*self;
@@ -53,11 +61,6 @@ typedef struct s_map
 	t_xy_pt		offset;
 }				t_map;
 
-// define
-#define WIDTH 1440
-#define HEIGHT 1010
-#define AMP 5
-
 // putmapc
 void			proj_cloud_to_img(t_map *map, t_img *img, int color);
 t_xy_pt			proj_iso_pt(t_xyz_pt *pt, float zoom);
@@ -75,5 +78,7 @@ void			test_cloud(char *file_path);
 // general_utils.c
 float			to_rad(float deg);
 
-// tempo
+// draw_line.c
 void			draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color);
+
+#endif

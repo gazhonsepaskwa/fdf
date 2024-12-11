@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_addon.c                                        :+:      :+:    :+:   */
+/*   slop.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 17:34:38 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/12/10 17:34:39 by nalebrun         ###   ########.fr       */
+/*   Created: 2024/12/11 12:24:26 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/12/11 12:24:59 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#ifndef SLOP_H
+# define SLOP_H
 
-int	mlx_put_px(t_img *img, int x, int y, int color)
+# include "fdf.h"
+
+typedef struct s_slop_pts
 {
-	char	*pixel;
+	t_xy_pt	from;
+	t_xy_pt	to;
+}	t_slop_pts;
 
-	if (x > WIDTH || y > HEIGHT || x < 0 || y < 0)
-		return (-1);
-	pixel = img->addr + ((y * img->line_len) + (x * (img->bpp / 8)));
-	*(unsigned int *)pixel = color;
-	return (0);
-}
+#endif
