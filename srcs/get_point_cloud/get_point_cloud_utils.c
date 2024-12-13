@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../../fdf.h"
 
 void	nl_to_sp(unsigned int unused, char *c)
 {
@@ -25,6 +25,7 @@ int	count_pts_inln(char *ln)
 	int	count;
 
 	i = 0;
+	count = 0;
 	while (ln[i + 1])
 	{
 		if (!ft_isdigit(ln[i]) && ft_isdigit(ln[i + 1]))

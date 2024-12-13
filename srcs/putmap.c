@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../fdf.h"
 
 t_xy_pt	proj_iso_pt(t_xyz_pt *pt, float zoom)
 {
@@ -34,32 +34,24 @@ static void	shift_to_center(t_xy_pt *pt, t_xy_pt offset)
 	pt->y += offset.y;
 }
 
-void	draw_line_axis(t_img *img, t_xyz_pt *ref, t_map *map, int color)
+void	draw_line_axis(t_img *img, int i, t_map *map, int color)
 {
-	int		i;
 	t_xy_pt	proj_from;
 	t_xy_pt	proj_to;
 
-	i = 0;
-	while (map->cld[i])
+	proj_from = proj_iso_pt(map->cld[i], map->zoom);
+	shift_to_center(&proj_from, map->offset);
+	if (i % map->size.x != map->size.x - 1)
 	{
-		if (map->cld[i]->y == ref->y + 1 && ref->x == map->cld[i]->x)
-		{
-			proj_from = proj_iso_pt(ref, map->zoom);
-			proj_to = proj_iso_pt(map->cld[i], map->zoom);
-			shift_to_center(&proj_from, map->offset);
-			shift_to_center(&proj_to, map->offset);
-			draw_line(img, proj_from, proj_to, color);
-		}
-		if (map->cld[i]->x == ref->x + 1 && ref->y == map->cld[i]->y)
-		{
-			proj_from = proj_iso_pt(ref, map->zoom);
-			proj_to = proj_iso_pt(map->cld[i], map->zoom);
-			shift_to_center(&proj_from, map->offset);
-			shift_to_center(&proj_to, map->offset);
-			draw_line(img, proj_from, proj_to, color);
-		}
-		i++;
+		proj_to = proj_iso_pt(map->cld[i + 1], map->zoom);
+		shift_to_center(&proj_to, map->offset);
+		draw_line(img, proj_from, proj_to, color);
+	}
+	if (!(i + map->size.x >= (map->size.x * map->size.y)))
+	{
+		proj_to = proj_iso_pt(map->cld[i + map->size.x], map->zoom);
+		shift_to_center(&proj_to, map->offset);
+		draw_line(img, proj_from, proj_to, color);
 	}
 }
 
@@ -70,7 +62,7 @@ void	proj_cloud_to_img(t_map *map, t_img *img, int color)
 	i = 0;
 	while (map->cld[i])
 	{
-		draw_line_axis(img, map->cld[i], map, color);
+		draw_line_axis(img, i, map, color);
 		i++;
 	}
 }

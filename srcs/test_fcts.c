@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   test_fcts.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/25 15:43:37 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/11/27 13:34:36 by nalebrun         ###   ########.fr       */
+/*   Created: 2024/12/10 17:35:12 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/12/10 17:35:14 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../libft.h"
+#include "../fdf.h"
 
-void	ft_free(char **p)
+void	test_cloud(char *file_path)
 {
-	if (p && *p)
-	{
-		free(*p);
-		*p = NULL;
-	}
-}
+	int			i;
+	t_xyz_pt	**cld;
+	t_xy_pt		unused;
 
-void	ft_free_v(void **p)
-{
-	if (p && *p)
+	i = 0;
+	ft_debug(" ===\n");
+	cld = get_pt_cloud(file_path, &unused);
+	while (cld[i] != NULL)
 	{
-		free(*p);
-		*p = NULL;
+		ft_debug(" %d (%d, %d, %d)\n", i + 1, cld[i]->x, cld[i]->y, cld[i]->z);
+		i++;
 	}
+	ft_debug(" ===\n");
+	free_pt_cloud(cld);
 }

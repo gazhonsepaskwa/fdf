@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../fdf.h"
 
 static int	graph_init(t_graph *g)
 {
@@ -28,25 +28,6 @@ static int	graph_init(t_graph *g)
 	return (0);
 }
 
-static int	input_check(int ac, char **av)
-{
-	int	fd;
-
-	if (ac != 2)
-	{
-		ft_printf("%sUsage : %s <map_file>\n%s", RED, av[0], RESET);
-		return (-1);
-	}
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-	{
-		ft_printf("%sPlease use an existing file\n%s", RED, RESET);
-		return (-1);
-	}
-	else
-		close(fd);
-	return (0);
-}
 
 void	proj_corner(t_xyz_pt *corners[4], t_xy_pt *out[2])
 {
@@ -95,29 +76,46 @@ void	calc_fit(t_map *map)
 	map->offset.y = (HEIGHT / 2) - (map->zoom * (proj[1].y + proj[0].y) / 2.0);
 }
 
+int close_win(int unused, t_graph *graph)
+{
+	(void) unused;
+	mlx_destroy_image(graph->xsrv, graph->img.self);
+	mlx_destroy_window(graph->xsrv, graph->win);
+	mlx_destroy_display(graph->xsrv);
+	free(graph->xsrv);
+	free_pt_cloud(graph->map.cld);
+	exit(EXIT_SUCCESS);
+}
+
+int keyhook(int keycode, t_graph *graph)
+{
+	(void)graph;
+	if (keycode == XK_Escape)
+		close_win(keycode, graph);
+	return (0);
+}
+
 int	main(int ac, char **av)
 {
 	t_graph	graph;
-	t_map	map;
 
 	if (input_check(ac, av) == -1)
 		return (1);
 	if (graph_init(&graph) == -1)
 		return (1);
 	ft_printf("%s[info]%s Getting point cloud...   ", BOLD_CYAN, RESET);
-	map.cld = get_pt_cloud(av[1], &map.size);
+	graph.map.cld = get_pt_cloud(av[1], &graph.map.size);
 	ft_printf("[DONE]\n");
-	calc_fit(&map);
+	calc_fit(&graph.map);
 	ft_printf("%s[info]%s Projecting cloud...      ", BOLD_CYAN, RESET);
-	proj_cloud_to_img(&map, &graph.img, 0x4bcec6);
+	proj_cloud_to_img(&graph.map, &graph.img, 0x4bcec6);
 	ft_printf("[DONE]\n");
 	ft_printf("%s[info]%s Putting img to window... ", BOLD_CYAN, RESET);
 	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
 	ft_printf("[DONE]\n");
 	ft_printf("%s[info]%s Render done !", BOLD_CYAN, RESET);
+	mlx_hook(graph.win, KEYD, M_KEYD, keyhook, &graph);
+	mlx_hook(graph.win, LITLE_CROSS, 0, close_win, &graph);
 	mlx_loop(graph.xsrv);
-	mlx_destroy_display(graph.xsrv);
-	free_pt_cloud(map.cld);
-	free(graph.xsrv);
 	return (0);
 }

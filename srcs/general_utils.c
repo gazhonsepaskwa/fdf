@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_fcts.c                                        :+:      :+:    :+:   */
+/*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 17:35:12 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/12/10 17:35:14 by nalebrun         ###   ########.fr       */
+/*   Created: 2024/12/10 17:33:21 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/12/10 17:33:32 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../fdf.h"
 
-void	test_cloud(char *file_path)
+float	to_rad(float deg)
 {
-	int			i;
-	t_xyz_pt	**cld;
-	t_xy_pt		unused;
-
-	i = 0;
-	ft_debug(" ===\n");
-	cld = get_pt_cloud(file_path, &unused);
-	while (cld[i] != NULL)
-	{
-		ft_debug(" %d (%d, %d, %d)\n", i + 1, cld[i]->x, cld[i]->y, cld[i]->z);
-		i++;
-	}
-	ft_debug(" ===\n");
-	free_pt_cloud(cld);
+	return (deg * M_PI / 180.0);
 }

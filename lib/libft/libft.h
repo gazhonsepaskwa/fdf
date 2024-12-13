@@ -78,6 +78,7 @@ char	*get_next_line(int fd);
 
 void	ft_free(char **p);
 void	ft_free_v(void **p);
+void	ft_free_c_tab(char **tab);
 
 void	ft_sleep(int time);
 

@@ -1,24 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   slop.h                                             :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalebrun <nalebrun@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 12:24:26 by nalebrun          #+#    #+#             */
-/*   Updated: 2024/12/11 12:24:59 by nalebrun         ###   ########.fr       */
+/*   Created: 2024/11/25 15:43:37 by nalebrun          #+#    #+#             */
+/*   Updated: 2024/11/27 13:34:36 by nalebrun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SLOP_H
-# define SLOP_H
+#include "../../libft.h"
 
-# include "fdf.h"
-
-typedef struct s_slop_pts
+void	ft_free(char **p)
 {
-	t_xy_pt	from;
-	t_xy_pt	to;
-}	t_slop_pts;
+	if (p && *p)
+	{
+		free(*p);
+		*p = NULL;
+	}
+}
 
-#endif
+void	ft_free_v(void **p)
+{
+	if (p && *p)
+	{
+		free(*p);
+		*p = NULL;
+	}
+}
+
+void	ft_free_c_tab(char **tab)
+{
+	int	i;
+
+	if (tab == NULL)
+		return ;
+	i = -1;
+	while (tab[++i])
+		free(tab[i]);
+	free(tab);
+}

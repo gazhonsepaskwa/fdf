@@ -10,20 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../../fdf.h"
 #include "get_pt_cloud.h"
-
-static void	ft_free_s_tab(char **tab)
-{
-	int	i;
-
-	if (tab == NULL)
-		return ;
-	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
-}
 
 static int	build_cloud(t_xy_pt *i, char **tab, t_xyz_pt **cloud, int fd)
 {
@@ -43,7 +31,7 @@ static int	build_cloud(t_xy_pt *i, char **tab, t_xyz_pt **cloud, int fd)
 			set_xyz_pt(cloud[lst_pt++], i->x, i->y, ft_atoi(tab[i->x]));
 			i->x++;
 		}
-		ft_free_s_tab(tab);
+		ft_free_c_tab(tab);
 		tab = get_clean_line(fd);
 		i->y++;
 	}
@@ -62,7 +50,7 @@ t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i)
 	fd = open(file_path, O_RDONLY);
 	lst_pt = build_cloud(i, tab, cloud, fd);
 	cloud[lst_pt] = NULL;
-	ft_free_s_tab(tab);
+	ft_free_c_tab(tab);
 	return (cloud);
 }
 
