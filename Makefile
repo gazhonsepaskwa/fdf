@@ -20,19 +20,18 @@ OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 
 all: $(NAME)
 
-$(LIBFT):
+$(LIBFT_DIR)/$(LIBFT):
 	@make -C $(LIBFT_DIR) all
-	@echo "libft made"
 
 init:
 	@make -C $(MLX_DIR) all
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(WFLAGS) -g3 -ggdb -c $< -o $@
+	$(CC) $(WFLAGS) -g3 -ggdb  -c $< -o $@ # -fsanitize=address 
 
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(WFLAGS) $(OBJS) $(LIBFT_DIR)/$(LIBFT) $(MLX_DIR)/$(MLX) $(BASELIB) $(XLINK) -g3 -ggdb -o $(NAME)
+$(NAME): $(LIBFT_DIR)/$(LIBFT) $(OBJS)
+	$(CC) $(WFLAGS) $(OBJS) $(LIBFT_DIR)/$(LIBFT) $(MLX_DIR)/$(MLX) $(BASELIB) $(XLINK) -g3 -ggdb  -o $(NAME) # -fsanitize=address
 
 clean:
 	rm -rf $(OBJDIR)
@@ -45,5 +44,9 @@ clean_libft:
 
 fclean_libft:
 	make -C $(LIBFT_DIR) fclean
+
+clean_all: clean clean_libft
+
+fclean_all: fclean fclean_libft 
 
 re: fclean all

@@ -13,12 +13,22 @@
 #include "../../fdf.h"
 #include "get_pt_cloud.h"
 
-static int	build_cloud(t_xy_pt *i, char **tab, t_xyz_pt **cloud, int fd)
+static void	update_min_max(int z, t_map *map)
+{
+	if (z > map->z_max)
+		map->z_max = z;
+	if (z < map->z_min)
+		map->z_min = z;
+}
+
+static int	build_cloud(t_xy_pt *i, char **tab, t_map *map, int fd)
 {
 	int	lst_pt;
+	int	tmp_z;
 
 	i->y = 0;
 	lst_pt = 0;
+	tmp_z = 0;
 	tab = get_clean_line(fd);
 	if (tab == NULL)
 		return (-1);
@@ -27,8 +37,10 @@ static int	build_cloud(t_xy_pt *i, char **tab, t_xyz_pt **cloud, int fd)
 		i->x = 0;
 		while (tab[i->x] != 0)
 		{
-			cloud[lst_pt] = ft_calloc(1, sizeof(t_xyz_pt));
-			set_xyz_pt(cloud[lst_pt++], i->x, i->y, ft_atoi(tab[i->x]));
+			map->cld[lst_pt] = ft_calloc(1, sizeof(t_xyz_pt));
+			tmp_z = ft_atoi(tab[i->x]);
+			update_min_max(tmp_z, map);
+			set_xyz_pt(map->cld[lst_pt++], i->x, i->y, tmp_z);
 			i->x++;
 		}
 		ft_free_c_tab(tab);
@@ -38,20 +50,25 @@ static int	build_cloud(t_xy_pt *i, char **tab, t_xyz_pt **cloud, int fd)
 	return (lst_pt);
 }
 
-t_xyz_pt	**get_pt_cloud(char *file_path, t_xy_pt *i)
+int	get_pt_cloud(char *file_path, t_xy_pt *i, t_map *map)
 {
-	t_xyz_pt	**cloud;
 	int			fd;
 	char		**tab;
 	int			lst_pt;
+	int			pts_count;
 
 	tab = NULL;
-	cloud = malloc((count_pts(file_path) + 1) * sizeof(t_xyz_pt *));
+	pts_count = count_pts(file_path);
+	if (pts_count == -1)
+		return (-1);
+	map->cld = malloc((pts_count + 1) * sizeof(t_xyz_pt *));
+	if (!map->cld)
+		return (-1);
 	fd = open(file_path, O_RDONLY);
-	lst_pt = build_cloud(i, tab, cloud, fd);
-	cloud[lst_pt] = NULL;
+	lst_pt = build_cloud(i, tab, map, fd);
+	map->cld[lst_pt] = NULL;
 	ft_free_c_tab(tab);
-	return (cloud);
+	return (0);
 }
 
 void	free_pt_cloud(t_xyz_pt **cloud)

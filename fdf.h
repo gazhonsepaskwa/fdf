@@ -20,12 +20,14 @@
 # include <X11/keysym.h>
 
 // define
-# define WIDTH 3840
-# define HEIGHT 2090
+# define WIDTH 1900//3840
+# define HEIGHT 1000//2090
 # define AMP 10
-# define M_KEYD 1L<<0
 # define KEYD 2 
 # define LITLE_CROSS 17
+# define NEG_COLOR 0x242424
+# define O_COLOR 0x888888
+# define POS_COLOR 0xffffff
 
 // structs
 typedef struct s_img
@@ -41,6 +43,7 @@ typedef struct s_xy_pt
 {
 	int			x;
 	int			y;
+	int			color;
 }				t_xy_pt;
 
 typedef struct s_xyz_pt
@@ -56,6 +59,8 @@ typedef struct s_map
 	t_xy_pt		size;
 	float		zoom;
 	t_xy_pt		offset;
+	int			z_max;
+	int			z_min;
 }				t_map;
 
 typedef struct s_graph
@@ -66,15 +71,27 @@ typedef struct s_graph
 	t_map		map;
 }				t_graph;
 
+typedef struct s_rgb
+{
+	int	r;
+	int	g;
+	int	b;
+}		t_rgb;
+
 // check.c
-int	input_check(int ac, char **av);
+int				input_check(int ac, char **av);
+
+//hooks.c
+int				close_win(t_graph *graph);
+int				close_win_and_pt_cld(t_graph *graph);
+int				keyhook(int keycode, t_graph *graph);
 
 // putmap.c
-void			proj_cloud_to_img(t_map *map, t_img *img, int color);
+void			proj_cloud_to_img(t_map *map, t_img *img);
 t_xy_pt			proj_iso_pt(t_xyz_pt *pt, float zoom);
 
 // get_pt_cloud.c
-t_xyz_pt		**get_pt_cloud(char *file_path, t_xy_pt *i);
+int				get_pt_cloud(char *file_path, t_xy_pt *i, t_map *map);
 void			free_pt_cloud(t_xyz_pt **cloud);
 char			**get_clean_line(int fd);
 
@@ -88,6 +105,9 @@ void			test_cloud(char *file_path);
 float			to_rad(float deg);
 
 // draw_line.c
-void			draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color);
+void			draw_line(t_img *img, t_xy_pt from, t_xy_pt to);
+
+// colors.c
+void			get_point_color(t_xyz_pt *pt, t_xy_pt *proj, t_map *map);
 
 #endif

@@ -65,7 +65,7 @@ static void	steep_slope(t_img *img, t_xy_pt d, t_slop_pts sp, int color)
 	}
 }
 
-void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color)
+void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to)
 {
 	t_xy_pt		d;
 	t_slop_pts	sp;
@@ -75,7 +75,7 @@ void	draw_line(t_img *img, t_xy_pt from, t_xy_pt to, int color)
 	d.x = abs(to.x - from.x);
 	d.y = abs(to.y - from.y);
 	if (d.x > d.y)
-		shallow_slope(img, d, sp, color);
+		shallow_slope(img, d, sp, from.color);
 	else
-		steep_slope(img, d, sp, color);
+		steep_slope(img, d, sp, from.color);
 }
