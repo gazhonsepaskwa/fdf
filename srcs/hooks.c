@@ -23,6 +23,6 @@ int	keyhook(int keycode, t_graph *graph)
 {
 	(void)graph;
 	if (keycode == XK_Escape)
-		close_win(graph);
+		close_win_and_pt_cld(graph);
 	return (0);
 }

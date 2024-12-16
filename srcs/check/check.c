@@ -76,6 +76,7 @@ static int	check_line_len(char *file_path)
 		free(line);
 		line = get_next_line(fd);
 	}
+	close(fd);
 	return (0);
 }
 
