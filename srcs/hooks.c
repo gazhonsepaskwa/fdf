@@ -43,14 +43,30 @@ static void	clean_img(t_img *img)
 	}
 }
 
+static int	kp_hooks(int keycode, t_graph *graph)
+{
+	if (keycode == XK_KP_Left)
+		rotate_z(&graph->map, M_PI / 16);
+	if (keycode == XK_KP_Right)
+		rotate_z(&graph->map, -M_PI / 16);
+	if (keycode == XK_KP_Add)
+		graph->map.zoom *= 1.2;
+	if (keycode == XK_KP_Subtract)
+		graph->map.zoom *= 0.8;
+	if (keycode == XK_KP_Begin)
+	{
+		clean_img(&graph->img);
+		front_proj(graph);
+		mlx_put_image_to_window(graph->xsrv, graph->win, graph->img.self, 0, 0);
+		return (1);
+	}
+	return (0);
+}
+
 int	keyhook(int keycode, t_graph *graph)
 {
 	if (keycode == XK_Escape)
 		close_win_and_pt_cld(graph);
-	if (keycode == XK_k)
-		graph->map.zoom *= 1.2;
-	if (keycode == XK_j)
-		graph->map.zoom *= 0.8;
 	if (keycode == XK_s)
 		front(&graph->map);
 	if (keycode == XK_w)
@@ -59,10 +75,8 @@ int	keyhook(int keycode, t_graph *graph)
 		left(&graph->map);
 	if (keycode == XK_a)
 		right(&graph->map);
-	if (keycode == XK_u)
-		rotate_z(&graph->map, M_PI / 16);
-	if (keycode == XK_i)
-		rotate_z(&graph->map, -M_PI / 16);
+	if (kp_hooks(keycode, graph) == 1)
+		return (0);
 	clean_img(&graph->img);
 	proj_cloud_to_img(&graph->map, &graph->img);
 	mlx_put_image_to_window(graph->xsrv, graph->win, graph->img.self, 0, 0);

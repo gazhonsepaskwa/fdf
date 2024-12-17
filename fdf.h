@@ -20,8 +20,8 @@
 # include <X11/keysym.h>
 
 // define
-# define WIDTH 3840
-# define HEIGHT 2090
+# define WIDTH 1920//3840
+# define HEIGHT 1080//2090
 # define AMP 10.0
 # define KEYD 2 
 # define LITLE_CROSS 17
@@ -128,5 +128,8 @@ void			right(t_map *map);
 
 // rotate.c
 void			rotate_z(t_map *map, float amp);
+
+// top_proj.c
+void			front_proj(t_graph *graph);
 
 #endif

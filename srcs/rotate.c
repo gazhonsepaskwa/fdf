@@ -12,7 +12,7 @@
 
 #include "../fdf.h"
 
-void	pt_time_rot_mat(t_xyz_pt *ma, t_rot_matrice *mb)
+static void	pt_time_rot_mat(t_xyz_pt *ma, t_rot_matrice *mb)
 {
 	t_xyz_pt	tmp;
 
