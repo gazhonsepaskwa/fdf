@@ -111,6 +111,7 @@ int	main(int ac, char **av)
 	ft_printf("[OK]\n%s[info]%s Rendering...             ", BOLD_CYAN, RESET);
 	proj_cloud_to_img(&graph.map, &graph.img);
 	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
+	put_info(graph.xsrv, graph.win);
 	ft_printf("[OK]\n%s[info]%s Render done !\n", BOLD_CYAN, RESET);
 	mlx_hook(graph.win, KEYD, 1L << 0, keyhook, &graph);
 	mlx_hook(graph.win, LITLE_CROSS, 0, close_win_and_pt_cld, &graph);

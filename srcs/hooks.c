@@ -58,6 +58,7 @@ static int	kp_hooks(int keycode, t_graph *graph)
 		clean_img(&graph->img);
 		front_proj(graph);
 		mlx_put_image_to_window(graph->xsrv, graph->win, graph->img.self, 0, 0);
+		put_info(graph->xsrv, graph->win);
 		return (1);
 	}
 	return (0);
@@ -80,5 +81,6 @@ int	keyhook(int keycode, t_graph *graph)
 	clean_img(&graph->img);
 	proj_cloud_to_img(&graph->map, &graph->img);
 	mlx_put_image_to_window(graph->xsrv, graph->win, graph->img.self, 0, 0);
+	put_info(graph->xsrv, graph->win);
 	return (0);
 }

@@ -132,4 +132,7 @@ void			rotate_z(t_map *map, float amp);
 // top_proj.c
 void			front_proj(t_graph *graph);
 
+// info.c
+void			put_info(void *xsrv, void *win);
+
 #endif
