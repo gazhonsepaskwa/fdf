@@ -1,4 +1,5 @@
-# fdf
-A simple wireframe 3d map displayer (42 school - common core - rank 2)
+# fdf (wireframe)
+**A wireframe 3d map displayer with rotations, translation and zoom.**
+</br></br>( 42 school - common core - rank 2 [bonus] )
 
-![Screenshot from 2024-12-17 17-49-03](https://github.com/user-attachments/assets/206708ed-785d-4204-bc11-9b5fb7622332)
+![Screenshot from 2024-12-17 23-40-39](https://github.com/user-attachments/assets/3199c69e-075a-47ac-8192-835473706a81)
