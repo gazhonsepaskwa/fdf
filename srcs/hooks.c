@@ -31,10 +31,40 @@ int	close_win(t_graph *graph)
 	exit(EXIT_SUCCESS);
 }
 
+static void	clean_img(t_img *img)
+{
+	int	i;
+
+	i = 0;
+	while (i < WIDTH * HEIGHT * 4)
+	{
+		img->addr[i] = 0;
+		i++;
+	}
+}
+
 int	keyhook(int keycode, t_graph *graph)
 {
-	(void)graph;
 	if (keycode == XK_Escape)
 		close_win_and_pt_cld(graph);
+	if (keycode == XK_k)
+		graph->map.zoom *= 1.2;
+	if (keycode == XK_j)
+		graph->map.zoom *= 0.8;
+	if (keycode == XK_s)
+		front(&graph->map);
+	if (keycode == XK_w)
+		back(&graph->map);
+	if (keycode == XK_d)
+		left(&graph->map);
+	if (keycode == XK_a)
+		right(&graph->map);
+	if (keycode == XK_u)
+		rotate_z(&graph->map, M_PI / 16);
+	if (keycode == XK_i)
+		rotate_z(&graph->map, -M_PI / 16);
+	clean_img(&graph->img);
+	proj_cloud_to_img(&graph->map, &graph->img);
+	mlx_put_image_to_window(graph->xsrv, graph->win, graph->img.self, 0, 0);
 	return (0);
 }

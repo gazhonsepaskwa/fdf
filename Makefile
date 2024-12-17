@@ -47,6 +47,16 @@ fclean_libft:
 
 clean_all: clean clean_libft
 
-fclean_all: fclean fclean_libft 
+fclean_all: fclean fclean_libft
+
+test:
+	@find maps/ -type f -name "*.fdf" | while read -r file; do \
+		echo "Executing: ./fdf $$file"; \
+		./fdf "$$file" || echo "Warning: Execution failed for $$file. Continuing..."; \
+	done; \
+	echo "All files processed."
+
+norm:
+	@norminette srcs/ fdf.h lib/libft
 
 re: fclean all

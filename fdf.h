@@ -22,7 +22,7 @@
 // define
 # define WIDTH 3840
 # define HEIGHT 2090
-# define AMP 10
+# define AMP 10.0
 # define KEYD 2 
 # define LITLE_CROSS 17
 # define NEG_COLOR 0x242424
@@ -48,9 +48,9 @@ typedef struct s_xy_pt
 
 typedef struct s_xyz_pt
 {
-	int			x;
-	int			y;
-	int			z;
+	float			x;
+	float			y;
+	float			z;
 }				t_xyz_pt;
 
 typedef struct s_map
@@ -78,6 +78,19 @@ typedef struct s_rgb
 	int	b;
 }		t_rgb;
 
+typedef struct s_rot_matrice
+{
+	float	aa;
+	float	ab;
+	float	ac;
+	float	ba;
+	float	bb;
+	float	bc;
+	float	ca;
+	float	cb;
+	float	cc;
+}			t_rot_matrice;
+
 // check.c
 int				input_check(int ac, char **av);
 
@@ -88,7 +101,7 @@ int				keyhook(int keycode, t_graph *graph);
 
 // putmap.c
 void			proj_cloud_to_img(t_map *map, t_img *img);
-t_xy_pt			proj_iso_pt(t_xyz_pt *pt, float zoom);
+t_xy_pt			proj_iso_pt(t_xyz_pt *pt, t_map *map);
 
 // get_pt_cloud.c
 int				get_pt_cloud(char *file_path, t_xy_pt *i, t_map *map);
@@ -98,9 +111,6 @@ char			**get_clean_line(int fd);
 // mlx_addon.c
 int				mlx_put_px(t_img *img, int x, int y, int color);
 
-// test_fcts.c
-void			test_cloud(char *file_path);
-
 // general_utils.c
 float			to_rad(float deg);
 
@@ -109,5 +119,14 @@ void			draw_line(t_img *img, t_xy_pt from, t_xy_pt to);
 
 // colors.c
 void			get_point_color(t_xyz_pt *pt, t_xy_pt *proj, t_map *map);
+
+// move.c
+void			front(t_map *map);
+void			back(t_map *map);
+void			left(t_map *map);
+void			right(t_map *map);
+
+// rotate.c
+void			rotate_z(t_map *map, float amp);
 
 #endif

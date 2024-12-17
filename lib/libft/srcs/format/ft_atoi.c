@@ -36,14 +36,6 @@ static int	ft_signer(char c, int *i)
 	return (sign);
 }
 
-static int	ft_signed(int sign)
-{
-	if (sign == -1)
-		return (0);
-	else
-		return (-1);
-}
-
 int	ft_atoi(const char *str)
 {
 	int		i;
@@ -63,10 +55,10 @@ int	ft_atoi(const char *str)
 	while (ft_isdigit(str[i]))
 	{
 		current_digit = str[i] - '0';
-		if (res > (LONG_MAX - current_digit) / 10)
-			return (ft_signed(sign));
 		res = (res * 10) + current_digit;
 		i++;
 	}
+	if (res > 10000)
+		res = 10000;
 	return ((int)(res *= sign));
 }

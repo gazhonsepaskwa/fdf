@@ -39,7 +39,7 @@ static int	graph_init(t_graph *g)
 	return (0);
 }
 
-void	proj_corner(t_xyz_pt *corners[4], t_xy_pt *out[2], float zoom)
+void	proj_corner(t_xyz_pt *corners[4], t_xy_pt *out[2], t_map *map)
 {
 	t_xy_pt	proj_min;
 	t_xy_pt	proj_max;
@@ -53,7 +53,7 @@ void	proj_corner(t_xyz_pt *corners[4], t_xy_pt *out[2], float zoom)
 	i = -1;
 	while (++i < 4)
 	{
-		proj = proj_iso_pt(corners[i], zoom);
+		proj = proj_iso_pt(corners[i], map);
 		if (proj.x < proj_min.x)
 			proj_min.x = proj.x;
 		if (proj.x > proj_max.x)
@@ -72,6 +72,7 @@ void	calc_fit(t_map *map)
 	t_xy_pt		proj[2];
 	t_xy_pt		*proj_ptr[2];
 	t_xyz_pt	*corners[4];
+	float		tmp;
 
 	proj_ptr[0] = &proj[0];
 	proj_ptr[1] = &proj[1];
@@ -79,9 +80,12 @@ void	calc_fit(t_map *map)
 	corners[1] = map->cld[map->size.x - 1];
 	corners[2] = map->cld[((map->size.y - 1) * (map->size.x))];
 	corners[3] = map->cld[(map->size.y) * (map->size.x) - 1];
-	proj_corner(corners, proj_ptr, 1.0);
+	tmp = map->zoom;
+	map->zoom = 1.0;
+	proj_corner(corners, proj_ptr, map);
+	map->zoom = tmp;
 	if (proj[1].x - proj[0].x == 0)
-		map->zoom = 100;
+		map->zoom = 10 * map->size.y;
 	else
 		map->zoom = 0.6 * fmin((float)(WIDTH / (proj[1].x - proj[0].x)),
 				(float)(HEIGHT / (proj[1].y - proj[0].y)));
@@ -109,7 +113,7 @@ int	main(int ac, char **av)
 	mlx_put_image_to_window(graph.xsrv, graph.win, graph.img.self, 0, 0);
 	ft_printf("[OK]\n%s[info]%s Render done !\n", BOLD_CYAN, RESET);
 	mlx_hook(graph.win, KEYD, 1L << 0, keyhook, &graph);
-	mlx_hook(graph.win, LITLE_CROSS, 0, close_win, &graph);
+	mlx_hook(graph.win, LITLE_CROSS, 0, close_win_and_pt_cld, &graph);
 	mlx_loop(graph.xsrv);
 	return (0);
 }
