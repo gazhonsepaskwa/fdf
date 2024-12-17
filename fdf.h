@@ -20,8 +20,8 @@
 # include <X11/keysym.h>
 
 // define
-# define WIDTH 1900//3840
-# define HEIGHT 1000//2090
+# define WIDTH 3840
+# define HEIGHT 2090
 # define AMP 10
 # define KEYD 2 
 # define LITLE_CROSS 17

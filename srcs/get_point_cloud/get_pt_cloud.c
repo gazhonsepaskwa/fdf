@@ -47,7 +47,6 @@ static int	build_cloud(t_xy_pt *i, char **tab, t_map *map, int fd)
 		tab = get_clean_line(fd);
 		i->y++;
 	}
-	close(fd);
 	return (lst_pt);
 }
 
@@ -71,6 +70,7 @@ int	get_pt_cloud(char *file_path, t_xy_pt *i, t_map *map)
 	lst_pt = build_cloud(i, tab, map, fd);
 	map->cld[lst_pt] = NULL;
 	ft_free_c_tab(tab);
+	close(fd);
 	return (0);
 }
 

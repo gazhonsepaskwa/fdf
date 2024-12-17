@@ -54,13 +54,13 @@ static int	onlyspace(char *str)
 	return (1);
 }
 
-static int	check_line_len(char *file_path)
+static int	check_line_len(int fd)
 {
-	int		fd;
 	int		len;
 	char	*line;
+	int		ok;
 
-	fd = open(file_path, O_RDONLY);
+	ok = TRUE;
 	line = get_next_line(fd);
 	if (!line)
 		return (-1);
@@ -68,15 +68,17 @@ static int	check_line_len(char *file_path)
 	while (line != NULL)
 	{
 		if (len != getnlen(line) || onlyspace(line))
-		{
-			free(line);
-			ft_printf("%sThe file is not well formated\n%s", RED, RESET);
-			return (-1);
-		}
+			ok = FALSE;
 		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
+	if (!ok)
+	{
+		free(line);
+		ft_printf("%sThe file is not well formated\n%s", RED, RESET);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -96,7 +98,8 @@ int	input_check(int ac, char **av)
 	if (empty_file(fd) == -1)
 		return (-1);
 	close(fd);
-	if (check_line_len(av[1]) == -1)
+	fd = open(av[1], O_RDONLY);
+	if (check_line_len(fd) == -1)
 		return (-1);
 	return (0);
 }
